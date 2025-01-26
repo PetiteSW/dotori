@@ -99,7 +99,7 @@ def _make_password_id(file_name: str) -> str:
 
 
 def _make_password_input(file_name: str) -> str:
-    return f"<input type='password' id='{_make_password_id(file_name)}'>"
+    return f"<input type='password' id='{_make_password_id(file_name)}' value='1111'>"
 
 
 ORDER_FILE_VALIDITY_CLASS_MAP = {
