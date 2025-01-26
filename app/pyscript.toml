@@ -1,4 +1,4 @@
-name = "KR Biz Tool"
+name = "FOR DOTORI"
 packages = [
     "jinja2",
     "pandas",

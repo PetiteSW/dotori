@@ -1,5 +1,5 @@
-# KRBIZ
-Basic static web applications for small business owners.
+# DOTORI TOOLS
+Basic static web applications for dotori company
 
 ## Developer's Guide.
 ### Architecture Decision Records 📝
