@@ -53,7 +53,7 @@ def initialize_delivery_key_format() -> None:
     select_input = document.getElementById("unified-variable-key-selection")
     select_input.replaceChildren()
     for var in unified_variables.unified_header:
-        new_opt = document.createElement('option')
+        new_opt = document.createElement("option")
         new_opt.value = var
         new_opt.innerHTML = var
         select_input.appendChild(new_opt)
@@ -139,7 +139,7 @@ def _make_delete_button(delivery_header: str) -> str:
         + f'id="{button_id}" value="{delivery_header}">'
     )
     trash_icon = '<img src="trash_icon.png" alt="🗑️" height=1em>'
-    return f'{button_tag}{trash_icon}</button></div>'
+    return f"{button_tag}{trash_icon}</button></div>"
 
 
 def make_delete_button_event_listener(delivery_header: str) -> Callable:
@@ -160,11 +160,11 @@ def make_delete_button_event_listener(delivery_header: str) -> Callable:
 def refresh_delivery_info_keys_table(_=None) -> None:
     key_registry = load_delivery_info_keys_from_local_storage()
     rows = [
-        '<tr>'
+        "<tr>"
         f'<td class="short-column">{key.delivery_info_header}</td>'
         f'<td class="short-column">{key.unified_variable_name}</td>'
         f'<td class="short-column">{_make_delete_button(key.delivery_info_header)}</td>'
-        '</tr>'
+        "</tr>"
         for key in key_registry.keys
     ]
     table_str = f"""
@@ -174,12 +174,12 @@ def refresh_delivery_info_keys_table(_=None) -> None:
                 <td> 통합 열 이름 </td>
                 <td> 삭제 </td>
             </tr>
-            {'\n'.join(rows)}
+            {"\n".join(rows)}
         </table>
     """
     viewer_box = document.getElementById("delivery-info-keys-viewer-box")
     viewer_box.replaceChildren()
-    new_table = document.createElement('table')
+    new_table = document.createElement("table")
     new_table.innerHTML = table_str
     viewer_box.appendChild(new_table)
     # Add delete button event listeners
@@ -231,7 +231,6 @@ class _PlatformDeliveryReportSetting:
                 col,
                 FromOriginalOrderFile(target=col, column=col),  # Always fall back
             )
-            window.console.log(str(mapping))
             # Parse the value based on the mapping setting.
             if isinstance(mapping, FromOriginalOrderFile):
                 value = order_row.get(
@@ -293,35 +292,56 @@ def _load_excel_file_as_platform_report_setting(
 
 
 _delivery_report_registry = {
-    'Naver': _PlatformDeliveryReportSetting(
+    "Naver": _PlatformDeliveryReportSetting(
         headers=pd.DataFrame(
-            columns=['상품주문번호', '배송방법', '택배사', '송장번호', '이름', '주소']
+            columns=["상품주문번호", "배송방법", "택배사", "송장번호", "이름", "주소"]
         ),
         mappings={
-            '상품주문번호': FromOriginalOrderFile(
-                '상품주문번호', column='상품주문번호'
+            "상품주문번호": FromOriginalOrderFile(
+                "상품주문번호", column="상품주문번호"
             ),
-            '배송방법': HardcodedColumn('배송방법', value='택배'),
-            '택배사': HardcodedColumn('택배사', value='롯데택배'),
-            '송장번호': FromDeliveryConfirmation('송장번호', column='운송장번호'),
-            '이름': FromOriginalOrderFile('이름', column='수취인명'),
-            '주소': FromDeliveryConfirmation('주소', column='수하인기본주소'),
+            "배송방법": HardcodedColumn("배송방법", value="택배"),
+            "택배사": HardcodedColumn("택배사", value="롯데택배"),
+            "송장번호": FromDeliveryConfirmation("송장번호", column="운송장번호"),
+            "이름": FromOriginalOrderFile("이름", column="수취인명"),
+            "주소": FromDeliveryConfirmation("주소", column="수하인기본주소"),
         },
         export_sheet_name="발송처리",
     ),
-    'Gmarket': _PlatformDeliveryReportSetting(
+    "Gmarket": _PlatformDeliveryReportSetting(
         headers=pd.DataFrame(
-            columns=['계정', '주문번호', '택배사', '송장번호', '수취인명'],
+            columns=["계정", "주문번호", "택배사", "송장번호", "수취인명"],
         ),
         mappings={
-            '계정': FromOriginalOrderFile(target='계정', column='판매아이디'),
-            '주문번호': FromOriginalOrderFile(target='주문번호', column='주문번호'),
-            '택배사': HardcodedColumn('택배사', value='롯데택배'),
-            '송장번호': FromDeliveryConfirmation('송장번호', column='운송장번호'),
-            '수취인명': FromOriginalOrderFile('이름', column='수령인명'),
+            "계정": FromOriginalOrderFile(target="계정", column="판매아이디"),
+            "주문번호": FromOriginalOrderFile(target="주문번호", column="주문번호"),
+            "택배사": HardcodedColumn("택배사", value="롯데택배"),
+            "송장번호": FromDeliveryConfirmation("송장번호", column="운송장번호"),
+            "수취인명": FromOriginalOrderFile("이름", column="수령인명"),
         },
     ),
-    'Coupang': _load_excel_file_as_platform_report_setting(
-        '_resources/_default_coupang_delivery_report_form.xlsx'
+    "Coupang": _load_excel_file_as_platform_report_setting(
+        "_resources/_default_coupang_delivery_report_form.xlsx"
+    ),
+    "11TH": _PlatformDeliveryReportSetting(
+        headers=pd.DataFrame(columns=["주문번호", "송장번호"]),
+        mappings={
+            "주문번호": FromOriginalOrderFile(target="주문번호", column="주문번호"),
+            "송장번호": FromDeliveryConfirmation("송장번호", column="운송장번호"),
+        },
+    ),
+    "Wadiz": _PlatformDeliveryReportSetting(
+        headers=pd.DataFrame(columns=["주문 번호", "송장번호"]),
+        mappings={
+            "주문번호": FromOriginalOrderFile(target="주문번호", column="주문번호"),
+            "송장번호": FromDeliveryConfirmation("송장번호", column="운송장번호"),
+        },
+    ),
+    "Kakao": _PlatformDeliveryReportSetting(
+        headers=pd.DataFrame(columns=["주문번호", "송장번호"]),
+        mappings={
+            "주문번호": FromOriginalOrderFile(target="주문번호", column="주문번호"),
+            "송장번호": FromDeliveryConfirmation("송장번호", column="운송장번호"),
+        },
     ),
 }
