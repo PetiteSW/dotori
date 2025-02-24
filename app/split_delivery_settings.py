@@ -97,7 +97,7 @@ def _update_delivery_info_keys_in_local_storage(
 
 def _initialize_delivery_info_keys_in_local_storage() -> None:
     window.console.log("Initializing delivery info keys as defaults.")
-    default_vars_to_header = {"고객주문번호": "order_id"}
+    default_vars_to_header = {"주문번호": "order_id"}
     _update_delivery_info_keys_in_local_storage(default_vars_to_header)
 
 
