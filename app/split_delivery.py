@@ -13,7 +13,6 @@ from js import URL, File, Uint8Array
 from order_file_io import get_bytes_from_file, load_order_file
 from order_settings import (
     PlatformHeaderVariableMap,
-    VariableMappings,
     find_matching_variable_map,
     load_order_variables_from_local_storage,
 )
@@ -21,7 +20,6 @@ from pyscript import document, when, window
 from split_delivery_settings import (
     _delivery_report_registry,
     load_delivery_info_keys_from_local_storage,
-    DeliveryInfoKeysRegistry,
     DeliveryInfoKey,
 )
 
