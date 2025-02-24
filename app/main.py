@@ -106,6 +106,6 @@ if __name__ == "__main__":
     document.getElementById("add-delivery-info-key").onsubmit = add_delivery_info_key
 
     # Remove in the next release
-    from .split_delivery_settings import _initialize_delivery_info_keys_in_local_storage
+    from split_delivery_settings import _initialize_delivery_info_keys_in_local_storage
 
     _initialize_delivery_info_keys_in_local_storage()
