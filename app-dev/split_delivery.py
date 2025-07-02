@@ -58,6 +58,7 @@ class DeliveryInfoUpdatedFileSpec:
     platform: str
     data_frame: pd.DataFrame
     export_sheet_name: str | None = None
+    startrow: int = 0
 
 
 def clear_delivery_result_container() -> None:
@@ -114,7 +115,10 @@ def _generate_download_event_handler(
         # Download the split file.
         bytes = io.BytesIO()
         export_excel(
-            file_spec.data_frame, bytes, export_sheet_name=file_spec.export_sheet_name
+            file_spec.data_frame,
+            bytes,
+            export_sheet_name=file_spec.export_sheet_name,
+            startrow=file_spec.startrow,
         )
         bytes_buffer = bytes.getbuffer()
         js_array = Uint8Array.new(bytes_buffer.nbytes)
@@ -164,7 +168,7 @@ class OrderDeliveryMatchingResults:
                     data_frame = pd.concat(rendered)
                 else:  # If there is 0 orders.
                     data_frame = pd.DataFrame(
-                        {col: [''] for col in report_setting.headers}
+                        {col: [""] for col in report_setting.headers}
                     )  # Leave empty row so that headers are rendered.
                     # If it is completely empty, headers are not rendered in the file.
 
@@ -172,6 +176,7 @@ class OrderDeliveryMatchingResults:
                     platform=platform,
                     data_frame=data_frame,
                     export_sheet_name=report_setting.export_sheet_name,
+                    startrow=report_setting.startrow,
                 )
             else:
                 ...  # Skip if report setting is not found.
@@ -217,9 +222,9 @@ def _find_matching_delivery_confirmation(
     return next(iter(matches)) if len(matches) == 1 else None
 
 
-def _delivery_info_key_registry_to_platform_header_ver() -> (
-    dict[str, tuple[_DeliveryInfoKeyPlatformVer, ...]]
-):
+def _delivery_info_key_registry_to_platform_header_ver() -> dict[
+    str, tuple[_DeliveryInfoKeyPlatformVer, ...]
+]:
     registry = load_delivery_info_keys_from_local_storage()
     unified_var_settings = load_order_variables_from_local_storage()
     var_mappings = unified_var_settings.platform_header_variable_maps
@@ -281,7 +286,7 @@ def split_delivery_info_per_platform(
 
 
 def render_leftover_delivery_info(container, left_over_df: pd.DataFrame) -> None:
-    table = document.createElement('div')
+    table = document.createElement("div")
     table.innerHTML = delivery_left_over_table_template.render(
         headers=left_over_df.columns,
         rows=[
@@ -309,7 +314,7 @@ def refresh_delivery_split_result() -> None:
         # Skip the impossible one
     ]
     clear_delivery_result_container()
-    table = document.createElement('table')
+    table = document.createElement("table")
     table.id = _DELIVERY_SPLIT_RESULT_TABLE_ID
     table.innerHTML = delivery_split_table_template.render(file_items=new_rows)
     container = document.getElementById(_DELIVERY_SPLIT_RESULT_CONTAINER_ID)
@@ -321,7 +326,7 @@ def refresh_delivery_split_result() -> None:
     if len(matching_results.cannot_be_matched) > 0:
         window.alert(
             f"총 {len(matching_results.cannot_be_matched)}개의 운송장 정보를 입력할 수 없었습니다: \n"
-            + ','.join(matching_results.cannot_be_matched['운송장번호'])
+            + ",".join(matching_results.cannot_be_matched["운송장번호"])
         )
 
     # Add event listener to the download button
