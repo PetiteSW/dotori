@@ -27,4 +27,4 @@ packages = [
 "delivery_form.py" = "delivery_form.py"
 "split_delivery.py" = "split_delivery.py"
 "split_delivery_settings.py" = "split_delivery_settings.py"
-"main_25070.py" = "main_25070.py"
+"main_26010.py" = "main_26010.py"
