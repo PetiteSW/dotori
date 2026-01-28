@@ -41,10 +41,11 @@ def export_excel(
     output_file_path: pathlib.Path | io.BytesIO,
     pretty: bool = True,
     export_sheet_name: str | None = "Sheet1",
+    startrow: int = 0,
 ) -> None:
     export_sheet_name = export_sheet_name or "Sheet1"
     with pd.ExcelWriter(output_file_path, engine="xlsxwriter") as writer:
-        df.to_excel(excel_writer=writer, index=False, sheet_name=export_sheet_name)
+        df.to_excel(excel_writer=writer, index=False, sheet_name=export_sheet_name, startrow=startrow)
         if pretty:
             for sheet in writer.sheets.values():
                 _adjust_column_width(sheet, df)

@@ -221,11 +221,20 @@ class _PlatformDeliveryReportSetting:
 
     i.e. Naver requires the excel sheet name to be ``발송처리``.
     """
+    startrow: int = 0
+    """Some platform starts row at 1... like TOSS."""
+
+    def _make_base(self, order_row: pd.Series) -> pd.DataFrame:
+        return (
+            pd.DataFrame(columns=order_row.keys().to_list())
+            if isinstance(self.headers, _OrderHeader)
+            else self.headers.copy(deep=True)
+        )
 
     def render(
         self, order_row: pd.Series, delivery_row: pd.Series | None
     ) -> pd.DataFrame:
-        base = self.headers.copy(deep=True)
+        base = self._make_base(order_row=order_row)
         for col in base.columns:
             mapping = self.mappings.get(
                 col,
@@ -291,6 +300,9 @@ def _load_excel_file_as_platform_report_setting(
     )
 
 
+class _OrderHeader: ...
+
+
 _delivery_report_registry = {
     "Naver": _PlatformDeliveryReportSetting(
         headers=pd.DataFrame(
@@ -343,5 +355,15 @@ _delivery_report_registry = {
             "주문번호": FromOriginalOrderFile(target="주문번호", column="주문번호"),
             "송장번호": FromDeliveryConfirmation("송장번호", column="운송장번호"),
         },
+    ),
+    "TOSS": _PlatformDeliveryReportSetting(
+        headers=_OrderHeader(),
+        mappings={
+            "주문번호": FromOriginalOrderFile(target="주문번호", column="주문번호"),
+            "송장번호": FromDeliveryConfirmation("송장번호", column="운송장번호"),
+            "택배사코드": HardcodedColumn(target="택배사코드", value="롯데택배"),
+            "주문상태": HardcodedColumn(target="주문상태", value="배송중"),
+        },
+        startrow=1,
     ),
 }
