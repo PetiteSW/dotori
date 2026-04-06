@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>FOR DOTORI</title>
+    <link rel="icon" type="image/x-icon" href="_resources/favicon.png">
+    <!-- Recommended meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta property="og:title" content="SW TOOLS FOR DOTORI COMPANY">
+    <meta property="og:image" content="_resources/thumbnail.png">
+    <meta property="og:description" content="도토리 컴퍼니 상거래 보조 프로그램">
+
+    <!-- PyScript CSS -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.10.1/core.css">
+
+    <!-- This script tag bootstraps PyScript -->
+    <script type="module" src="https://pyscript.net/releases/2024.10.1/core.js"></script>
+
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+    <div class="page">
+    <div class="app-container">
+        <div class="section-container">
+            <h1>📜주문관리📜 - 서로 다른 판매경로 주문 내역 합치기</h1>
+            <div class="module-container" id="order-file-upload-box">
+                <h2 class="file-upload-module-text">주문 내역 파일 올리기</h2>
+                <div class="big-button-box">
+                    <label class="big-button" for="order-file-upload">눌러서 파일 찾기 ...</label>
+                    <input type="file" id="order-file-upload" multiple style="display:none"> <br>
+                </div>
+                <details open>
+                    <summary font-size="62">주문 내역 파일 목록</summary>
+                    <div id="order-file-list-table-container"></div>
+                </details>
+            </div>
+            <div class="module-container" id="order-file-merge-box">
+                <h2 class="file-merge-module-text">주문 내역 병합</h2>
+                <details>
+                    <summary>[통합 된 주문 내역 미리보기]</summary>
+                    <span class="explaining-text">파일 당 한 열만 앞 두 글자 씩 보여드립니다.   </span><button id="merge-preview-refresh" class="small-button">🔄새로고침🔄</button>
+                    <div id="order-render-preview-box"></div>
+                </details>
+                <div class="big-button-box">
+                    <button class="big-button" id="merged-orders-download-button">전체 주문 내역 내려받기</button>
+                </div>
+                <details>
+                    <summary font-size="62">통합 열 이름 ⚙️설정⚙️ (각기 다른 열 이름을 한 가지 이름으로 통일합니다.)</summary>
+                    <p class="explaining-text">
+                        아래 설정 사항은 브라우저를 종료하셔도 유지됩니다.<br>
+                        하지만 사용자님께서<br>
+                        1. 다른 브라우저를 사용하거나<br>
+                        2. 브라우저가 저장한 정보를 따로 ♻️삭제♻️ 하는 경우<br>
+                        설정 정보를 불러올 수 없거나 정보가 ♻️삭제♻️되오니 <br>
+                        '현재 설정파일 내려받기' 버튼을 이용해 설정내용을 저장해두시는 것을 추천합니다.<br>
+                        설정내용은 엑셀파일 형식으로 저장됩니다.
+                    </p>
+                    <button class="setting-button" ><label for="new-order-variables-button">설정파일<br>새로<br>올리기</label></button>
+                    <input type="file" id="new-order-variables-button" style="display:none">
+                    <button class="setting-button" id="download-order-variables-button">현재<br>설정파일<br>내려받기</button>
+                    <button class="setting-button" id="reset-order-variables-button"><br>초기화<br><br></button>
+                    <p>[통합 행 이름 현재 설정]</p>
+                    <div id="order-variable-setting-view-box"></div>
+                </details>
+            </div>
+        </div>
+        <div class="section-container">
+            <h1>📦배송준비📦 - 합친 주문내역 배송양식에 맞게 바꾸기</h1>
+            <div class="module-container" id="order-file-merge-box">
+                <details>
+                    <summary>[배송양식으로 변환된 주문 내역 미리보기]</summary>
+                    <span class="explaining-text">파일 당 한 열만 앞 두 글자 씩 보여드립니다.   </span><button id="delivery-preview-refresh" class="small-button">🔄새로고침🔄</button>
+                    <div id="delivery-format-render-preview-box"></div>
+                </details>
+                <div class="big-button-box">
+                    <button class="big-button" id="delivery-format-orders-download-button">배송양식에 맞춘 전체 주문 내역 내려받기</button>
+                </div>
+                <details>
+                    <summary font-size="62">배송양식 변환 ⚙️설정⚙️ (통합된 주문내역을 배송양식에 맞게 변환합니다.)</summary>
+                    <p class="explaining-text">
+                        아래 설정 사항은 브라우저를 종료하셔도 유지됩니다.<br>
+                        하지만 사용자님께서<br>
+                        1. 다른 브라우저를 사용하거나<br>
+                        2. 브라우저가 저장한 정보를 따로 ♻️삭제♻️ 하는 경우<br>
+                        설정 정보를 불러올 수 없거나 정보가 ♻️삭제♻️되오니 <br>
+                        '현재 설정파일 내려받기' 버튼을 이용해 설정내용을 저장해두시는 것을 추천합니다.<br>
+                        설정내용은 엑셀파일 형식으로 저장됩니다.
+                    </p>
+                    <button class="setting-button"><label for="new-delivery-format-button">설정파일<br>새로<br>올리기</label></button>
+                    <input type="file" id="new-delivery-format-button" style="display:none">
+                    <button class="setting-button" id="download-delivery-format-button">현재<br>설정파일<br>내려받기</button>
+                    <button class="setting-button" id="reset-delivery-format-button"><br>초기화<br><br></button>
+                    <p>[배송양식 변환 현재 설정]</p>
+                    <div id="delivery-format-setting-viewer-box"></div>
+                </details>
+            </div>
+        </div>
+        <div class="section-container">
+            <h1>🚛배송완료🚛 - 완료된 배송내역 판매경로별로 분리하기</h1>
+            <div class="module-container" id="delivery-split-box">
+                <h2 class="file-upload-module-text">배송내역 파일 올리기</h2>
+                <div class="big-button-box">
+                    <label class="big-button" for="delivery-file-upload">눌러서 파일 찾기 ...</label>
+                    <input type="file" id="delivery-file-upload" style="display:none"> <br>
+                </div>
+                <p id="delivery_confirmation_file_name">아직 올리신 배송내역이 없습니다.</p>
+                <details open>
+                    <summary>
+                        판매경로별로 분리된 배송정보 <button id="delivery-split-result-refresh" class="small-button">🔄새로고침🔄</button>
+                    </summary>
+                    <div id="delivery-split-result-container"></div>
+                </details>
+                <details open>
+                    <summary font-size="62">배송정보-주문정보(통합 열 이름) 짝 찾기 ⚙️설정⚙️ (운송장을 입력할 주문정보를 찾을 수 있도록 설정합니다.)</summary>
+                    <p>[배송정보-주문정보 짝 찾기 현재 설정] - 아래 열 이름 짝을 이용해 각 플랫폼 별로 운송장 정보를 입력할 주문건을 찾습니다.</p>
+                    <div id="delivery-info-keys-viewer-box"></div> <br>
+                    <form id="add-delivery-info-key">
+                        <label for="delivery-info-header-key">배송정보 열 이름:</label>
+                        <input type="text" id="delivery-info-header-key" name="delivery-info-header-key">
+                        <label for="unified-variable-key-selection">통합 열 이름:</label>
+                        <select type="select" id="unified-variable-key-selection" name="unified-variable-key-selection">
+                        </select>
+                        <input type="submit" value="+ 열 이름 짝 추가하기">
+                    </form>
+                </details>
+            </div>
+        </div>
+    </div>
+    <div class="clinging-bar">
+        <p> v.26.01.1 </p>
+        <p>⬇️⬇️ 문제사항 제보 ⬇️⬇️</p>
+        <button><a href="https://github.com/PetiteSW/krbiz/issues/new?assignees=&labels=&projects=&template=%EB%AC%B8%EC%A0%9C%EC%A0%90-%EB%B2%84%EA%B7%B8--%EC%A0%9C%EB%B3%B4.md&title=%5BBUG%5D" target="_blank">깃허브 문제 제보</a></button>
+
+        <p>⬇️⬇️ 새로운 기능 제안 ⬇️⬇️</p>
+        <button><a href="https://github.com/PetiteSW/krbiz/issues/new?assignees=&labels=&projects=&template=%EC%83%88%EB%A1%9C%EC%9A%B4-%EA%B8%B0%EB%8A%A5-%EC%A0%9C%EC%95%88.md&title=%5BFEATURE%5D" target="_blank">깃허브 기능 제안</a></button>
+    </div>
+    </div>
+    <script type="py" src="./main_26011.py?v=1" config="./pyscript.toml"></script>
+</body>
+</html>

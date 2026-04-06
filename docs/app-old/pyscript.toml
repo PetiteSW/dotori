@@ -1,0 +1,30 @@
+name = "FOR DOTORI"
+packages = [
+    "jinja2",
+    "pandas",
+    "pyyaml",
+    "msoffcrypto-tool",
+    "openpyxl",
+    "xlrd",
+    "xlsxwriter",
+    "rich",
+    "pygments"
+]
+
+[files]
+"_templates/order-file-table.html.jinja" = "_templates/order-file-table.html.jinja"
+"_templates/order-file-list-item.html.jinja" = "_templates/order-file-list-item.html.jinja"
+"_templates/delivery-split-table.html.jinja" = "_templates/delivery-split-table.html.jinja"
+"_templates/delivery-split-list-item.html.jinja" = "_templates/delivery-split-list-item.html.jinja"
+"_templates/__init__.py" = "_templates/__init__.py"
+"_resources/default_krbiz_order_unified_row_names.xlsx" = "_resources/default_krbiz_order_unified_row_names.xlsx"
+"_resources/default_krbiz_delivery_format.xlsx" = "_resources/default_krbiz_delivery_format.xlsx"
+"_resources/_default_coupang_delivery_report_form.xlsx" = "_resources/_default_coupang_delivery_report_form.xlsx"
+"merge_order.py" = "merge_order.py"
+"order_settings.py" = "order_settings.py"
+"order_file_io.py" = "order_file_io.py"
+"excel_helpers.py" = "excel_helpers.py"
+"delivery_form.py" = "delivery_form.py"
+"split_delivery.py" = "split_delivery.py"
+"split_delivery_settings.py" = "split_delivery_settings.py"
+"main_26011.py" = "main_26011.py"
