@@ -106,5 +106,3 @@ if __name__ == "__main__":
     refresh_delivery_info_keys_table()
     document.getElementById("add-delivery-info-key").onsubmit = add_delivery_info_key
 
-    # Remove in the next release
-    _initialize_delivery_info_keys_in_local_storage()
