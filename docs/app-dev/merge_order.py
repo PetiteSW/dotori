@@ -50,9 +50,10 @@ def translated_first_rows() -> Generator[tuple[str, pd.DataFrame]]:
             if variable_map is None:
                 window.console.log("Could not find the matching platform.")
             else:
-                original_df = load_excel(
-                    file_bytes, header_row=variable_map.header, nrows=1
-                )
+                original_df = load_excel(file_bytes, header_row=variable_map.header)
+                original_df = original_df.drop([i_row for i_row in variable_map.ignored_rows]).reset_index()
+                original_df = original_df[:1]
+                print(original_df)
                 yield file_name, translate_df(original_df, variable_map)
         except KeyError:  # noqa: PERF203
             # Skip the encrypted file with invalid password.
@@ -119,6 +120,7 @@ def merge_orders() -> pd.DataFrame:
                 window.console.log("Could not find the matching platform.")
             else:
                 original_df = load_excel(file_bytes, variable_map.header)
+                original_df = original_df.drop([i_row for i_row in variable_map.ignored_rows]).reset_index()
                 translated = translate_df(original_df, variable_map)
                 dfs.append(translated)
         except KeyError:  # noqa: PERF203

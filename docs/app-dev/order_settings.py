@@ -1,7 +1,7 @@
 import io
 import json
 import pathlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import pandas as pd
 from excel_helpers import export_excel, load_excel
@@ -10,14 +10,16 @@ from pyscript import document, window
 
 PLATFORM_NAME_COLUMN_NAME = "PlatformName"
 HEADER_ROW_COLUMN_NAME = "HeaderRow"
+IGNORED_ROWS_COLUMN_NAME = "IgnoredRows"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PlatformHeaderVariableMap:
     """Platform header variable mapping."""
 
     platform: str
     header: int
+    ignored_rows: list[int] = field(default_factory=list)
     variable_mapping: dict[str, str]
 
 
@@ -78,16 +80,15 @@ class VariableMappings:
     @classmethod
     def from_dataframe(cls, mapping_df: pd.DataFrame) -> "VariableMappings":
         mapping_df = mapping_df.fillna("")
+        setting_columns = (PLATFORM_NAME_COLUMN_NAME, HEADER_ROW_COLUMN_NAME, IGNORED_ROWS_COLUMN_NAME)
         return cls(
             platform_header_variable_maps=[
                 PlatformHeaderVariableMap(
                     platform=row[PLATFORM_NAME_COLUMN_NAME],
                     header=int(row[HEADER_ROW_COLUMN_NAME]) - 1,
+                    ignored_rows=[int(num)-1 for num in row[IGNORED_ROWS_COLUMN_NAME].split(',') if num],
                     variable_mapping={
-                        col: row[col]
-                        for col in mapping_df.columns
-                        if col
-                        not in (PLATFORM_NAME_COLUMN_NAME, HEADER_ROW_COLUMN_NAME)
+                        col: row[col] for col in mapping_df.columns if col not in setting_columns
                     },
                 )
                 for _, row in mapping_df.iterrows()

@@ -162,8 +162,9 @@ class OrderDeliveryMatchingResults:
                         report_setting.render(
                             order_row=matched_pair.original_order_row,
                             delivery_row=matched_pair.delivery_confirmation_row,
+                            irow=i_pair,
                         )
-                        for matched_pair in matched_pairs
+                        for i_pair, matched_pair in enumerate(matched_pairs)
                     ]
                     data_frame = pd.concat(rendered)
                 else:  # If there is 0 orders.

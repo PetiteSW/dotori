@@ -1,5 +1,5 @@
 import json
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 
 import pandas as pd
@@ -223,6 +223,12 @@ class _PlatformDeliveryReportSetting:
     """
     startrow: int = 0
     """Some platform starts row at 1... like TOSS."""
+    keep_original_rows: Iterable[int] = ()
+    """Some platform has ignored rows under headers... like TOSS.
+    
+    The setting should be using index starting 1, like excel, not 0 like python.
+    It is because at some point we would like to expose this settings to users.
+    """
 
     def _make_base(self, order_row: pd.Series) -> pd.DataFrame:
         return (
@@ -232,9 +238,14 @@ class _PlatformDeliveryReportSetting:
         )
 
     def render(
-        self, order_row: pd.Series, delivery_row: pd.Series | None
+        self, order_row: pd.Series, delivery_row: pd.Series | None, irow: int
     ) -> pd.DataFrame:
         base = self._make_base(order_row=order_row)
+        if irow in (ignored_irow-1 for ignored_irow in self.keep_original_rows):
+            for col in base.columns:
+                base[col] = [order_row.get(col)]
+            return base
+    
         for col in base.columns:
             mapping = self.mappings.get(
                 col,
@@ -361,9 +372,10 @@ _delivery_report_registry = {
         mappings={
             "주문번호": FromOriginalOrderFile(target="주문번호", column="주문번호"),
             "송장번호": FromDeliveryConfirmation("송장번호", column="운송장번호"),
-            "택배사코드": HardcodedColumn(target="택배사코드", value="롯데택배"),
+            "택배사": HardcodedColumn(target="택배사", value="롯데택배"),
             "주문상태": HardcodedColumn(target="주문상태", value="배송중"),
         },
-        startrow=1,
+        startrow=3,
+        keep_original_rows=(1,)
     ),
 }

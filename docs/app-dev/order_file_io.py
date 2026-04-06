@@ -115,7 +115,9 @@ def _get_order_numbers(
     if variable_map is None:
         return ""
     else:
-        return str(len(load_excel(file_bytes, header_row=variable_map.header)))
+        df = load_excel(file_bytes, header_row=variable_map.header)
+        df = df.drop([i_row for i_row in variable_map.ignored_rows]).reset_index()
+        return str(len(df))
 
 
 def get_file_item_row(file_name: str) -> str:
