@@ -1,0 +1,13 @@
+[workspace]
+authors = ["newsun <newsun@noreply.codeberg.org>"]
+channels = ["conda-forge"]
+name = "dotori"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+zensical = ">=0.0.31,<0.0.32"
+python = "3.13.*"
+pandas = ">=3.0.2,<4"
