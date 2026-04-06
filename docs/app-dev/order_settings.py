@@ -86,7 +86,7 @@ class VariableMappings:
                 PlatformHeaderVariableMap(
                     platform=row[PLATFORM_NAME_COLUMN_NAME],
                     header=int(row[HEADER_ROW_COLUMN_NAME]) - 1,
-                    ignored_rows=[int(num)-1 for num in row[IGNORED_ROWS_COLUMN_NAME].split(',') if num],
+                    ignored_rows=[int(num)-1 for num in row.get(IGNORED_ROWS_COLUMN_NAME, '').split(',') if num],
                     variable_mapping={
                         col: row[col] for col in mapping_df.columns if col not in setting_columns
                     },
@@ -139,7 +139,7 @@ def refresh_order_variable_setting_view() -> None:
     variable_mappings = load_order_variables_from_local_storage()
     unified_header = variable_mappings.unified_header
     header_row = _make_order_variable_preview_row(
-        ["통합변수", PLATFORM_NAME_COLUMN_NAME, HEADER_ROW_COLUMN_NAME, *unified_header]
+        ["통합변수", PLATFORM_NAME_COLUMN_NAME, HEADER_ROW_COLUMN_NAME, IGNORED_ROWS_COLUMN_NAME, *unified_header]
     )
     # 통합변수 and PLATFORM_NAME_COLUMN_NAME is repeated just to make sure
     # the user can understand that it is part of the variable.
@@ -149,6 +149,7 @@ def refresh_order_variable_setting_view() -> None:
                 platform.platform,
                 platform.platform,
                 str(platform.header + 1),
+		','.join(str(irow+1) for irow in platform.ignored_rows),
                 *(
                     platform.variable_mapping[unified_var]
                     for unified_var in unified_header
